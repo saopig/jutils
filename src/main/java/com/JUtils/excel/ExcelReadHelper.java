@@ -12,12 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.NumberToTextConverter;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.JUtils.date.DateUtils;
 import com.JUtils.date.DateFormatUtils;
@@ -56,7 +52,8 @@ public class ExcelReadHelper {
 	public static List<Object> excelRead(File file,String[] properties,Class obj) throws Exception{
 		Workbook book = null;
 		try {
-			book = new XSSFWorkbook(new FileInputStream(file));     //解析2003
+			//book = new XSSFWorkbook(new FileInputStream(file));     //解析2003
+			//book =
 		} catch (Exception e) { 
 			book = new HSSFWorkbook(new FileInputStream(file));      //解析2007
 		}
@@ -229,9 +226,9 @@ public class ExcelReadHelper {
 
 	@SuppressWarnings("static-access")
 	private static String getValue(Cell cell) {  
-        if (cell.getCellType() == cell.CELL_TYPE_BOOLEAN) {  
+        if (cell.getCellType() == CellType.BOOLEAN) {
             return String.valueOf(cell.getBooleanCellValue());  
-        } else if (cell.getCellType() == cell.CELL_TYPE_NUMERIC) {
+        } else if (cell.getCellType() == CellType.NUMERIC) {
             return NumberToTextConverter.toText(cell.getNumericCellValue());  
         } else {  
             return String.valueOf(cell.getStringCellValue());  
