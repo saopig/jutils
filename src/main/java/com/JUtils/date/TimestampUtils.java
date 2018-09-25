@@ -24,10 +24,10 @@ public class TimestampUtils {
      * @since v1.0.0
      */
     public static Timestamp string2Timestamp(String value){
-        if(value == null && !"".equals(value.trim())){
+        if(value == null ||value.isEmpty()){
             return null;
         }
-    	Timestamp ts = new Timestamp(System.currentTimeMillis());
+    	Timestamp ts;
     	ts = Timestamp.valueOf(value);
     	return ts;
     }
@@ -84,6 +84,6 @@ public class TimestampUtils {
      * @since v1.0.0
      */
     public static Date timestamp2Date(Timestamp time){
-        return time == null ? null : time;
+        return time == null ? null : Date.from(time.toInstant());
     }
 }

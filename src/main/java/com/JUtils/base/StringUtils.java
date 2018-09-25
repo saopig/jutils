@@ -31,16 +31,16 @@ public class StringUtils {
                 "Ｍ", "Ｎ", "Ｏ", "Ｐ", "Ｑ", "Ｒ", "Ｓ", "Ｔ", "Ｕ", "Ｖ", "Ｗ", "Ｘ",
                 "Ｙ", "Ｚ", "－", "＿", "＝", "＋", "＼", "｜", "【", "】", "；", "：",
                 "'", "\"", "，", "〈", "。", "〉", "／", "？" };
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             int pos = source.indexOf(str.charAt(i));
             if (pos != -1) {
-                result += decode[pos];
+                result.append(decode[pos]);
             } else {
-                result += str.charAt(i);
+                result.append(str.charAt(i));
             }
         }
-        return result;
+        return result.toString();
     }
 	
 	/**
@@ -159,7 +159,7 @@ public class StringUtils {
 			return false;
 		}
 		for (int i = 0; i < value.length(); i++) {
-			if (Character.isLowerCase(value.charAt(i)) == false) {
+			if (!Character.isLowerCase(value.charAt(i))) {
 				return false;
 			}
 		}
@@ -180,7 +180,7 @@ public class StringUtils {
 			return false;
 		}
 		for (int i = 0; i < value.length(); i++) {
-			if (Character.isUpperCase(value.charAt(i)) == false) {
+			if (!Character.isUpperCase(value.charAt(i))) {
 				return false;
 			}
 		}

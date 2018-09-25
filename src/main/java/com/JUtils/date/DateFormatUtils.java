@@ -88,8 +88,6 @@ public class DateFormatUtils {
 		SimpleDateFormat outFmt = null;
 		ParsePosition pos = new ParsePosition(0);
 		date = date.replace("-", "").replace(":", "");
-		if ((date == null) || ("".equals(date.trim())))
-			return "";
 		try {
 			if (Long.parseLong(date) == 0L)
 				return "";
