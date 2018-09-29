@@ -61,8 +61,6 @@ public class FileAnalysis {
         } catch (IOException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-
-
         executorService.shutdown();
     }
 
@@ -127,7 +125,7 @@ public class FileAnalysis {
                 return count;
             } catch (IOException e) {
                 e.printStackTrace();
-            }finally {
+            } finally {
                 try {
                     fileChannel.close();
                 } catch (IOException e) {
@@ -150,7 +148,6 @@ public class FileAnalysis {
 //            while (str.contains(s)) {
 //                str = str.substring(str.indexOf(s) + s.length(), str.length());
 //                count++;
-//
 //            }
 //            return count;
 //        }
@@ -169,7 +166,7 @@ public class FileAnalysis {
             do {
                 index = kmp(str, s, next);
                 if (index != -1) {
-                    str = str.substring(index + s.length(), str.length());
+                    str = str.substring(index + s.length());
                     count++;
                 }
             } while (index != -1);
