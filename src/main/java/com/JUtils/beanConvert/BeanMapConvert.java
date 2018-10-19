@@ -16,19 +16,18 @@ import java.util.Map;
  * @date 2016-09-24
  * @since 1.0.0
  */
-public class BeanMapConvert {
+public class BeanMapConvert<T> {
     /**
      * Bean转换为Map
      *
      * @param object
      * @return String-Object的HashMap
-     *
      * @author chenssy
      * @date 2016-09-25
      * @since v1.0.0
      */
-    public static Map<String,Object> bean2MapObject(Object object){
-        if(object == null){
+    public static Map<String, Object> bean2MapObject(Object object) {
+        if (object == null) {
             return null;
         }
 
@@ -48,7 +47,7 @@ public class BeanMapConvert {
                 }
             }
         } catch (Exception e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
 
         return map;
@@ -57,22 +56,19 @@ public class BeanMapConvert {
     /**
      * Map转换为Java Bean
      *
-     * @param map
-     *              待转换的Map
-     * @param object
-     *              Java Bean
+     * @param map    待转换的Map
+     * @param t Java Bean
      * @return java.lang.Object
-     *
      * @author chenssy
      * @date 2016-09-25
      * @since v1.0.0
      */
-    public static Object map2Bean(Map map,Object object){
-        if(map == null || object == null){
+    public T map2Bean(Map map, T t) {
+        if (map == null || t == null) {
             return null;
         }
         try {
-            BeanInfo beanInfo = Introspector.getBeanInfo(object.getClass());
+            BeanInfo beanInfo = Introspector.getBeanInfo(t.getClass());
             PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
 
             for (PropertyDescriptor property : propertyDescriptors) {
@@ -81,7 +77,7 @@ public class BeanMapConvert {
                     Object value = map.get(key);
                     // 得到property对应的setter方法
                     Method setter = property.getWriteMethod();
-                    setter.invoke(object, value);
+                    setter.invoke(t, value);
                 }
             }
         } catch (IntrospectionException e) {
@@ -91,6 +87,6 @@ public class BeanMapConvert {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        return object;
+        return t;
     }
 }

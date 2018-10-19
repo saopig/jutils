@@ -30,12 +30,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
  * http请求工具类，包装Apache httpClient
+ * @author renyue
  */
 public class HttpUtils {
 
@@ -86,29 +88,15 @@ public class HttpUtils {
      * @return 返回值
      */
     public String sendPostHttp(String url, Map<String, String> params, long timeOut, Charset charset, Map<String, String> headMap) {
-        CloseableHttpClient httpClient = HttpClientBuilder.create().
-                setConnectionTimeToLive(timeOut, TimeUnit.MINUTES).build();
         String res = null;
-        try {
-
-            HttpPost post = new HttpPost(url);
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().
+                setConnectionTimeToLive(timeOut, TimeUnit.MINUTES).build();) {
+            HttpPost post = createPost(params, url, charset);
             setHead(post, headMap);
-            List<BasicNameValuePair> req = new ArrayList<>();
-            params.forEach((k, v) -> {
-                req.add(new BasicNameValuePair(k, v));
-            });
-            HttpEntity httpEntity = new UrlEncodedFormEntity(req, charset);
-            post.setEntity(httpEntity);
             HttpResponse response = httpClient.execute(post);
             res = EntityUtils.toString(response.getEntity(), charset);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                httpClient.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         return res;
     }
@@ -153,7 +141,6 @@ public class HttpUtils {
     }
 
     /**
-     *
      * @param url
      * @param params
      * @param timeOut
@@ -161,19 +148,11 @@ public class HttpUtils {
      * @param headMap
      * @return
      */
-    public String sendPostHttps(String url, Map<String, String> params, long timeOut, Charset charset, Map<String, String> headMap){
+    public String sendPostHttps(String url, Map<String, String> params, long timeOut, Charset charset, Map<String, String> headMap) {
         String res = null;
-        try (CloseableHttpClient client = SSLClient();){
-            HttpPost post = new HttpPost(url);
+        try (CloseableHttpClient client = SSLClient();) {
+            HttpPost post = createPost(params, url, charset);
             setHead(post, headMap);
-
-            List<BasicNameValuePair> req = new ArrayList<>();
-            params.forEach((k, v) -> {
-                req.add(new BasicNameValuePair(k, v));
-            });
-
-            HttpEntity httpEntity = new UrlEncodedFormEntity(req, charset);
-            post.setEntity(httpEntity);
             HttpResponse response = client.execute(post);
             res = EntityUtils.toString(response.getEntity(), charset);
         } catch (Exception e) {
@@ -181,8 +160,20 @@ public class HttpUtils {
         }
         return res;
     }
+
     private void setHead(HttpRequest request, Map<String, String> headMap) {
         headMap.forEach(request::addHeader);
+    }
+
+    private HttpPost createPost(Map<String, String> params, String url, Charset charset) {
+        HttpPost post = new HttpPost(url);
+        List<BasicNameValuePair> req = new ArrayList<>();
+        params.forEach((k, v) -> {
+            req.add(new BasicNameValuePair(k, v));
+        });
+        HttpEntity httpEntity = new UrlEncodedFormEntity(req, charset);
+        post.setEntity(httpEntity);
+        return post;
     }
 
     class FilePart {
@@ -213,5 +204,12 @@ public class HttpUtils {
         public void setContentType(ContentType contentType) {
             this.contentType = contentType;
         }
+    }
+
+    public static void main(String[] args) {
+        HttpUtils utils = new HttpUtils();
+
+        String res = utils.sendPostHttps("https://www.baidu.com",new HashMap<>(),0,Charset.forName("UTF-8"),new HashMap<>());
+        System.out.println(res);
     }
 }
